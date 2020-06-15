@@ -14,6 +14,7 @@ private:
 	double ex_result[79];
 	bool val_isRibo;
 	bool knn_isRibo;
+	int geneNum;
 
 public:
 	riboData() {
@@ -48,6 +49,15 @@ public:
 		return knn_isRibo;
 	}
 
+	void setGNum(int n) {
+		geneNum = n;
+	}
+
+	int getGNum() {
+		return geneNum;
+	}
+
+	// 다른 데이터와 euclidean distance를 구하는 함수.
 	double getDist(riboData data) {
 		double dist = 0;
 		for (int i = 0; i < 79; i++) {
@@ -71,7 +81,7 @@ int main() {
 	cout.tie(NULL);
 	cout << fixed<<setprecision(2);
 
-	int tokIdx = 0;
+	int tokIdx = 0, gn = 1;
 	riboData rData;
 
 	ifstream ribo_file, nonRibo_file;
@@ -87,6 +97,8 @@ int main() {
 
 			rData.setRibo(true);
 			rData.setKnnRibo(true);
+			rData.setGNum(gn);
+			gn++;
 			while (sstr >> tok) {
 				// 79개의 벡터 데이터를 tokenize하여 저장
 				rData.setResult(tokIdx, stod(tok));
@@ -110,6 +122,8 @@ int main() {
 
 			rData.setRibo(false);
 			rData.setKnnRibo(false);
+			rData.setGNum(gn);
+			gn++;
 			while (sstr >> tok) {
 				rData.setResult(tokIdx, stod(tok));
 				tokIdx++;
@@ -292,5 +306,18 @@ int main() {
 	cout << "Sensitivity : " << sens << '\n';
 	cout << "Specificity : " << spec << '\n';
 	cout << "Accuracy : " << accu << '\n';
+
+	ofstream outfile;
+	outfile.open("knn.out");
+	if (outfile.is_open()) {
+		outfile << "k: " << kVal << '\n';
+		outfile << "p : " << p << '\n';
+		outfile << "Sensitivity : " << sens << '\n';
+		outfile << "Specificity : " << spec << '\n';
+		outfile << "Accuracy : " << accu << '\n';
+
+		outfile.close();
+	}
+	system("PAUSE");
 	return 0;
 }
